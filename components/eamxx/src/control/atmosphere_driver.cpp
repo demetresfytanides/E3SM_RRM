@@ -534,6 +534,66 @@ void AtmosphereDriver::create_fields()
     m_field_mgrs[grid->name()]->registration_begins();
   }
 
+  // Before registering fields, check that Field Requests for tracers are compatible
+  {
+    // Create map from tracer name to a vector which contains the field requests for that tracer.
+    std::map<std::string, std::vector<FieldRequest>> tracer_requests;
+    auto gather_tracer_requests = [&] (FieldRequest req) {
+      if (std::find(req.groups.begin(),
+                    req.groups.end(),
+                    "tracers") == req.groups.end()) return;
+
+      std::string fname = req.fid.name();
+      if (tracer_requests.find(fname) == tracer_requests.end()) {
+        tracer_requests[fname] = std::vector<FieldRequest>(1, req);
+      } else {
+        tracer_requests[fname].push_back(req);
+      }
+    };
+    for (const auto& req : m_atm_process_group->get_required_field_requests()){
+      gather_tracer_requests(req);
+    }
+    for (const auto& req : m_atm_process_group->get_computed_field_requests()) {
+      gather_tracer_requests(req);
+    }
+
+    // Go through the map entry for each tracer and check that every one
+    // has the same request for turbulence advection.
+    for (auto fr : tracer_requests) {
+      bool mismatch_found = false;
+
+      const auto reqs = fr.second;
+      const bool is_first_turb_advect =
+        std::find(reqs.front().groups.begin(),
+                  reqs.front().groups.end(),
+                  "turbulence_advected_tracers") != reqs.front().groups.end();
+      for (size_t i=1; i<reqs.size(); ++i) {
+        const bool is_turb_advect =
+          std::find(reqs[i].groups.begin(),
+                    reqs[i].groups.end(),
+                    "turbulence_advected_tracers") != reqs[i].groups.end();
+        if (is_turb_advect != is_first_turb_advect) {
+          mismatch_found = true;
+          break;
+        }
+      }
+      if (mismatch_found) {
+        std::ostringstream ss;
+        ss << "Error! Incompatible tracer request. Turbulence advection requests not consistent among processes.\n"
+              "  - Tracer name: " + fr.first + "\n"
+              "  - Requests (process name, grid name, is tracers turbulence advected):\n";
+        for (auto req : reqs) {
+          const auto grid_name = req.fid.get_grid_name();
+          const bool turb_advect = std::find(req.groups.begin(),
+                                             req.groups.end(),
+                                             "turbulence_advected_tracers") != req.groups.end();
+          ss << "    - (" + req.calling_process + ", " + grid_name + ", " + (turb_advect ? "true" : "false") + ")\n";
+        }
+        EKAT_ERROR_MSG(ss.str());
+      }
+    }
+  }
+
   // Register required/computed fields
   for (const auto& req : m_atm_process_group->get_required_field_requests()) {
     m_field_mgrs.at(req.fid.get_grid_name())->register_field(req);

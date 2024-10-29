@@ -81,19 +81,19 @@ void MAMMicrophysics::set_grids(
   // ----------- Atmospheric quantities -------------
 
   // Specific humidity [kg/kg](Require only for building DS)
-  add_tracer<Required>("qv", grid_, kg/kg); // specific humidity
+  add_tracer<Required>("qv", grid_, kg/kg, true); // specific humidity
 
   // Cloud liquid mass mixing ratio [kg/kg](Require only for building DS)
-  add_tracer<Updated>("qc", grid_, kg/kg); // cloud liquid wet mixing ratio
+  add_tracer<Updated>("qc", grid_, kg/kg, true); // cloud liquid wet mixing ratio
 
   // Cloud ice mass mixing ratio [kg/kg](Require only for building DS)
-  add_tracer<Required>("qi", grid_, kg/kg); // ice wet mixing ratio
+  add_tracer<Required>("qi", grid_, kg/kg, true); // ice wet mixing ratio
 
   // Cloud liquid number mixing ratio [1/kg](Require only for building DS)
-  add_tracer<Updated>("nc", grid_, n_unit); // cloud liquid wet number mixing ratio
+  add_tracer<Updated>("nc", grid_, n_unit, true); // cloud liquid wet number mixing ratio
 
   // Cloud ice number mixing ratio [1/kg](Require only for building DS)
-  add_tracer<Required>("ni", grid_, n_unit); // ice number mixing ratio
+  add_tracer<Required>("ni", grid_, n_unit, true); // ice number mixing ratio
 
   // Temperature[K] at midpoints
   add_field<Required>("T_mid", scalar3d_mid, K, grid_name);
@@ -152,20 +152,22 @@ void MAMMicrophysics::set_grids(
 
   // (interstitial) aerosol tracers of interest: mass (q) and number (n) mixing
   // ratios
+  // NOTE: For interstitial aerosols, we have dynamics advect, but not turbulence.
   for(int m = 0; m < nmodes; ++m) {
     const char *int_nmr_field_name = mam_coupling::int_aero_nmr_field_name(m);
 
-    add_tracer<Updated>(int_nmr_field_name, grid_, n_unit);
+    add_tracer<Updated>(int_nmr_field_name, grid_, n_unit, false);
     for(int a = 0; a < mam_coupling::num_aero_species(); ++a) {
       const char *int_mmr_field_name =
           mam_coupling::int_aero_mmr_field_name(m, a);
 
       if(strlen(int_mmr_field_name) > 0) {
-        add_tracer<Updated>(int_mmr_field_name, grid_, kg/kg);
+        add_tracer<Updated>(int_mmr_field_name, grid_, kg/kg, false);
       }
     }  // for loop species
   }    // for loop nmodes interstitial
   // (cloud) aerosol tracers of interest: mass (q) and number (n) mixing ratios
+  // NOTE: For cloudborne aerosols, DO NOT advect.
   for(int m = 0; m < nmodes; ++m) {
     const char *cld_nmr_field_name = mam_coupling::cld_aero_nmr_field_name(m);
 
@@ -183,7 +185,7 @@ void MAMMicrophysics::set_grids(
   // aerosol-related gases: mass mixing ratios
   for(int g = 0; g < mam_coupling::num_aero_gases(); ++g) {
     const char *gas_mmr_field_name = mam_coupling::gas_mmr_field_name(g);
-    add_tracer<Updated>(gas_mmr_field_name, grid_, kg/kg);
+    add_tracer<Updated>(gas_mmr_field_name, grid_, kg/kg, true);
   }
 
   // Creating a Linoz reader and setting Linoz parameters involves reading data

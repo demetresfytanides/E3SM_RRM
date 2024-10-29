@@ -71,19 +71,19 @@ void MAMDryDep::set_grids(
 
   // ----------- Atmospheric quantities -------------
   // Specific humidity [kg/kg](Require only for building DS)
-  add_tracer<Required>("qv", grid_, q_unit);
+  add_tracer<Required>("qv", grid_, q_unit, true);
 
   // Cloud liquid mass mixing ratio [kg/kg](Require only for building DS)
-  add_tracer<Required>("qc", grid_, q_unit);
+  add_tracer<Required>("qc", grid_, q_unit, true);
 
   // Cloud ice mass mixing ratio [kg/kg](Require only for building DS)
-  add_tracer<Required>("qi", grid_, q_unit);
+  add_tracer<Required>("qi", grid_, q_unit, true);
 
   // Cloud liquid number mixing ratio [1/kg](Require only for building DS)
-  add_tracer<Required>("nc", grid_, n_unit);
+  add_tracer<Required>("nc", grid_, n_unit, true);
 
   // Cloud ice number mixing ratio [1/kg](Require only for building DS)
-  add_tracer<Required>("ni", grid_, n_unit);
+  add_tracer<Required>("ni", grid_, n_unit, true);
 
   // Temperature[K] at midpoints
   add_field<Required>("T_mid", scalar3d_mid, K, grid_name);
@@ -153,20 +153,22 @@ void MAMDryDep::set_grids(
 
   // (interstitial) aerosol tracers of interest: mass (q) and number (n) mixing
   // ratios
+  // NOTE: For interstitial aerosols, we have dynamics advect, but not turbulence.
   for(int m = 0; m < num_aero_modes; ++m) {
     const char *int_nmr_field_name = mam_coupling::int_aero_nmr_field_name(m);
 
-    add_tracer<Updated>(int_nmr_field_name, grid_, n_unit);
+    add_tracer<Updated>(int_nmr_field_name, grid_, n_unit, false);
     for(int a = 0; a < mam_coupling::num_aero_species(); ++a) {
       const char *int_mmr_field_name =
           mam_coupling::int_aero_mmr_field_name(m, a);
 
       if(strlen(int_mmr_field_name) > 0) {
-        add_tracer<Updated>(int_mmr_field_name, grid_, q_unit);
+        add_tracer<Updated>(int_mmr_field_name, grid_, q_unit, false);
       }
     }
   }
   // (cloud) aerosol tracers of interest: mass (q) and number (n) mixing ratios
+  // NOTE: For cloudborne aerosols, DO NOT advect.
   for(int m = 0; m < num_aero_modes; ++m) {
     const char *cld_nmr_field_name = mam_coupling::cld_aero_nmr_field_name(m);
 
@@ -184,7 +186,7 @@ void MAMDryDep::set_grids(
   // aerosol-related gases: mass mixing ratios
   for(int g = 0; g < mam_coupling::num_aero_gases(); ++g) {
     const char *gas_mmr_field_name = mam_coupling::gas_mmr_field_name(g);
-    add_tracer<Updated>(gas_mmr_field_name, grid_, q_unit);
+    add_tracer<Updated>(gas_mmr_field_name, grid_, q_unit, true);
   }
 
   // -------------------------------------------------------------
