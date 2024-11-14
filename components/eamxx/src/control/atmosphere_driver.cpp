@@ -539,9 +539,7 @@ void AtmosphereDriver::create_fields()
     // Create map from tracer name to a vector which contains the field requests for that tracer.
     std::map<std::string, std::vector<FieldRequest>> tracer_requests;
     auto gather_tracer_requests = [&] (FieldRequest req) {
-      if (std::find(req.groups.begin(),
-                    req.groups.end(),
-                    "tracers") == req.groups.end()) return;
+      if (not ekat::contains(req.groups, "tracers")) return;
 
       std::string fname = req.fid.name();
       if (tracer_requests.find(fname) == tracer_requests.end()) {
@@ -563,15 +561,9 @@ void AtmosphereDriver::create_fields()
       bool mismatch_found = false;
 
       const auto reqs = fr.second;
-      const bool is_first_turb_advect =
-        std::find(reqs.front().groups.begin(),
-                  reqs.front().groups.end(),
-                  "turbulence_advected_tracers") != reqs.front().groups.end();
+      const bool is_first_turb_advect = ekat::contains(reqs.front().groups, "turbulence_advected_tracers")
       for (size_t i=1; i<reqs.size(); ++i) {
-        const bool is_turb_advect =
-          std::find(reqs[i].groups.begin(),
-                    reqs[i].groups.end(),
-                    "turbulence_advected_tracers") != reqs[i].groups.end();
+        const bool is_turb_advect = ekat::contains(reqs[i].groups, "turbulence_advected_tracers");
         if (is_turb_advect != is_first_turb_advect) {
           mismatch_found = true;
           break;
@@ -584,9 +576,7 @@ void AtmosphereDriver::create_fields()
               "  - Requests (process name, grid name, is tracers turbulence advected):\n";
         for (auto req : reqs) {
           const auto grid_name = req.fid.get_grid_name();
-          const bool turb_advect = std::find(req.groups.begin(),
-                                             req.groups.end(),
-                                             "turbulence_advected_tracers") != req.groups.end();
+          const bool turb_advect = ekat::contains(req.groups, "turbulence_advected_tracers");
           ss << "    - (" + req.calling_process + ", " + grid_name + ", " + (turb_advect ? "true" : "false") + ")\n";
         }
         EKAT_ERROR_MSG(ss.str());
