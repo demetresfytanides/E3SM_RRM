@@ -561,7 +561,7 @@ void AtmosphereDriver::create_fields()
       bool mismatch_found = false;
 
       const auto reqs = fr.second;
-      const bool is_first_turb_advect = ekat::contains(reqs.front().groups, "turbulence_advected_tracers")
+      const bool is_first_turb_advect = ekat::contains(reqs.front().groups, "turbulence_advected_tracers");
       for (size_t i=1; i<reqs.size(); ++i) {
         const bool is_turb_advect = ekat::contains(reqs[i].groups, "turbulence_advected_tracers");
         if (is_turb_advect != is_first_turb_advect) {
