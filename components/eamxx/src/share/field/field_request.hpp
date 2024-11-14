@@ -271,7 +271,7 @@ struct FieldRequest {
   SubviewInfo               subview_info;
   std::string               parent_name;
   bool                      incomplete = false;
-  std::string               calling_process = "";
+  std::string               calling_process = "UNKNOWN";
 };
 
 // In order to use FieldRequest in std sorted containers (like std::set),
