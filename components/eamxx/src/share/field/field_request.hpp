@@ -285,7 +285,11 @@ inline bool operator< (const FieldRequest& lhs,
     if (lhs.pack_size<rhs.pack_size) {
       return true;
     } else if (lhs.pack_size==rhs.pack_size) {
-      return lhs.groups < rhs.groups;
+      if (lhs.groups < rhs.groups) {
+        return true;
+      } else if (lhs.groups==rhs.groups) {
+        return lhs.calling_process < rhs.calling_process;
+      }
     }
   }
   return false;
