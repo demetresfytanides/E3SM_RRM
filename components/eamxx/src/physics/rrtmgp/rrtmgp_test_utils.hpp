@@ -11,7 +11,6 @@ namespace rrtmgpTest {
 
 bool file_exists(const char *filename);
 
-#ifdef RRTMGP_ENABLE_KOKKOS
 template <typename RealT=scream::Real, typename LayoutT=Kokkos::LayoutRight, typename DeviceT=DefaultDevice>
 struct rrtmgp_test_utils {
 
@@ -140,7 +139,6 @@ static void write_fluxes(
 }
 
 };
-#endif
 
 }
 #endif

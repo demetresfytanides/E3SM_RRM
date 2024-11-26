@@ -5,17 +5,13 @@ namespace scream {
 
 void init_kls ()
 {
-#ifdef RRTMGP_ENABLE_KOKKOS
   // Initialize kokkos
   if(!Kokkos::is_initialized()) { Kokkos::initialize(); }
-#endif
 }
 
 void finalize_kls()
 {
-#ifdef RRTMGP_ENABLE_KOKKOS
-  //Kokkos::finalize(); We do the kokkos finalization elsewhere
-#endif
+  // Kokkos::finalize(); We do the kokkos finalization elsewhere
 }
 
 }  // namespace scream

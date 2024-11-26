@@ -43,7 +43,6 @@ using PC = scream::physics::Constants<Real>;
 /*
  * Run standalone test through SCREAM driver this time
  */
-#ifdef RRTMGP_ENABLE_KOKKOS
 TEST_CASE("rrtmgp_scream_standalone_k", "") {
 #ifdef RRTMGP_LAYOUT_LEFT
   using layout_t   = Kokkos::LayoutLeft;
@@ -376,6 +375,5 @@ TEST_CASE("rrtmgp_scream_standalone_k", "") {
   // opportunity to deallocate all it's arrays.
   ad.finalize();
 }
-#endif
 
 }

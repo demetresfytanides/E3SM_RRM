@@ -27,7 +27,6 @@ void expect_another_arg (int i, int argc) {
   EKAT_REQUIRE_MSG(i != argc-1, "Expected another cmd-line arg.");
 }
 
-#ifdef RRTMGP_ENABLE_KOKKOS
 int run_kokkos(int argc, char** argv) {
   using namespace ekat::logger;
   using logger_t = Logger<LogNoFile,LogRootRank>;
@@ -259,7 +258,6 @@ int run_kokkos(int argc, char** argv) {
 
   return nerr != 0 ? 1 : 0;
 }  // end of main driver code
-#endif
 
 }
 
@@ -267,9 +265,7 @@ int main(int argc, char** argv) {
 
     MPI_Init(&argc,&argv);
     int ret = 0;
-#ifdef RRTMGP_ENABLE_KOKKOS
     ret += run_kokkos(argc,argv);
-#endif
     MPI_Finalize();
 
     return ret;

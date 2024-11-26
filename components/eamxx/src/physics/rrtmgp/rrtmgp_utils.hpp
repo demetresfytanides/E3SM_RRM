@@ -18,7 +18,6 @@ namespace rrtmgp {
 // of approximating pdel by differencing the level interface pressures.
 // We are leaving this for the time being for consistency with SCREAMv0,
 // from which this code was directly ported.
-#ifdef RRTMGP_ENABLE_KOKKOS
 template<class View1, class View2, class View3, class View4>
 void compute_heating_rate (
   View1 const &flux_up,
@@ -37,7 +36,6 @@ void compute_heating_rate (
                                ) * physconst::gravit / (physconst::Cpair * pdel(icol,ilay));
   });
 }
-#endif
 
 inline bool radiation_do(const int irad, const int nstep) {
   // If irad == 0, then never do radiation;
@@ -53,7 +51,6 @@ inline bool radiation_do(const int irad, const int nstep) {
 
 // Verify that array only contains values within valid range, and if not
 // report min and max of array
-#ifdef RRTMGP_ENABLE_KOKKOS
 template <class T, typename std::enable_if<T::rank == 1>::type* dummy = nullptr>
 bool check_range_k(T x, typename T::const_value_type xmin, typename T::const_value_type xmax,
                    std::string msg, std::ostream& out=std::cout) {
@@ -138,9 +135,6 @@ bool check_range_k(T x, typename T::const_value_type xmin, typename T::const_val
   }
   return pass;
 }
-
-
-#endif
 
 } // namespace rrtmgp
 } // namespace scream

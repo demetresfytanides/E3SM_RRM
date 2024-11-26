@@ -7,13 +7,11 @@
 
 namespace {
 
-#ifdef RRTMGP_ENABLE_KOKKOS
 template <typename View>
 auto chc(const View& view)
 {
   return Kokkos::create_mirror_view_and_copy(HostDevice(), view);
 }
-#endif
 
 // Names of input files we will need.
 std::string coefficients_file_sw = SCREAM_DATA_DIR "/init/rrtmgp-data-sw-g112-210809.nc";
@@ -21,7 +19,6 @@ std::string coefficients_file_lw = SCREAM_DATA_DIR "/init/rrtmgp-data-lw-g128-21
 std::string cloud_optics_file_sw = SCREAM_DATA_DIR "/init/rrtmgp-cloud-optics-coeffs-sw.nc";
 std::string cloud_optics_file_lw = SCREAM_DATA_DIR "/init/rrtmgp-cloud-optics-coeffs-lw.nc";
 
-#ifdef RRTMGP_ENABLE_KOKKOS
 using interface_t = scream::rrtmgp::rrtmgp_interface<>;
 using pool_t = interface_t::pool_t;
 using real1dk = interface_t::view_t<scream::Real*>;
@@ -816,6 +813,5 @@ TEST_CASE("rrtmgp_aerocom_cloudtop_k") {
   pool_t::finalize();
   scream::finalize_kls();
 }
-#endif
 
 }

@@ -21,9 +21,7 @@
 #include "ekat/logging/ekat_logger.hpp"
 #include "ekat/util/ekat_math_utils.hpp"
 
-#ifdef RRTMGP_ENABLE_KOKKOS
 #include "Kokkos_Random.hpp"
-#endif
 
 namespace scream {
 
@@ -33,7 +31,6 @@ void finalize_kls();
 namespace rrtmgp {
 
 // New interface for Kokkos and flexible types
-#ifdef RRTMGP_ENABLE_KOKKOS
 template <typename RealT=Real, typename LayoutT=Kokkos::LayoutRight, typename DeviceT=DefaultDevice>
 struct rrtmgp_interface {
 
@@ -1327,7 +1324,6 @@ static optical_props1_t get_subsampled_clouds(
 }
 
 }; // struct rrtmgp_interface
-#endif // RRTMGP_ENABLE_KOKKOS
 
 } // namespace rrtmgp
 } // namespace scream
