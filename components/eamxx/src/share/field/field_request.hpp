@@ -108,7 +108,7 @@ struct GroupRequest {
 
   // Default copy ctor is perfectly fine
   GroupRequest (const GroupRequest&) = default;
-  
+
   // Main parts of a group request
   std::string name;   // Group name
   std::string grid;   // Grid name
@@ -191,7 +191,7 @@ inline bool operator< (const GroupRequest& lhs,
 
 /*
  * A struct used to request a field.
- * 
+ *
  * The request contains at least a FieldIdentifier, but can also contain
  * a pack size, and a list of names of groups that the field should belong to.
  */
@@ -271,6 +271,7 @@ struct FieldRequest {
   SubviewInfo               subview_info;
   std::string               parent_name;
   bool                      incomplete = false;
+  std::string               calling_process = "UNKNOWN";
 };
 
 // In order to use FieldRequest in std sorted containers (like std::set),
@@ -284,7 +285,11 @@ inline bool operator< (const FieldRequest& lhs,
     if (lhs.pack_size<rhs.pack_size) {
       return true;
     } else if (lhs.pack_size==rhs.pack_size) {
-      return lhs.groups < rhs.groups;
+      if (lhs.groups < rhs.groups) {
+        return true;
+      } else if (lhs.groups==rhs.groups) {
+        return lhs.calling_process < rhs.calling_process;
+      }
     }
   }
   return false;
