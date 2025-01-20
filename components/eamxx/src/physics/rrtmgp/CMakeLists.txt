@@ -187,10 +187,12 @@ endif()
 #       since yakl_process_target already used it
 #       with the "plain" signature
 
-find_library(NETCDF_C netcdf HINTS ${NetCDF_C_PATH}/lib)
+find_library(NETCDF_C netcdf
+  HINTS ${NetCDF_C_PATH}
+  PATH_SUFFIXES lib lib64)
+
 target_link_libraries(scream_rrtmgp_interface ${NETCDF_C} rrtmgp scream_share Kokkos::kokkos)
-target_include_directories(scream_rrtmgp_interface PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(scream_rrtmgp_interface PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(scream_rrtmgp_interface SYSTEM PUBLIC
     ${NetCDF_C_PATH}/include
     ${EAM_RRTMGP_DIR}/external)
