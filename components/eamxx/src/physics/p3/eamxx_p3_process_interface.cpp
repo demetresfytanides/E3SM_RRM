@@ -170,7 +170,7 @@ void P3Microphysics::init_buffers(const ATMBufferManager &buffer_manager)
 
   using spack_2d_view_t = decltype(m_buffer.inv_exner);
   spack_2d_view_t* _2d_spack_mid_view_ptrs[Buffer::num_2d_vector] = {
-    &m_buffer.inv_exner, &m_buffer.th_atm, &m_buffer.cld_frac_l, &m_buffer.cld_frac_i,
+    &m_buffer.inv_exner, &m_buffer.th_atm, //&m_buffer.cld_frac_l, &m_buffer.cld_frac_i,
     &m_buffer.dz, &m_buffer.qv2qi_depos_tend, &m_buffer.rho_qi, &m_buffer.unused
 #ifdef SCREAM_P3_SMALL_KERNELS
     , &m_buffer.mu_r, &m_buffer.T_atm, &m_buffer.lamr, &m_buffer.logn0r, &m_buffer.nu,
@@ -255,6 +255,8 @@ void P3Microphysics::initialize_impl (const RunType /* run_type */)
   const  auto& pseudo_density_dry = get_field_in("pseudo_density_dry").get_view<const Pack**>();
   const  auto& T_atm          = get_field_out("T_mid").get_view<Pack**>();
   const  auto& cld_frac_t     = get_field_in("cldfrac_tot").get_view<const Pack**>();
+  const  auto& cld_frac_l     = get_field_in("cldfrac_liq").get_view<const Pack**>();
+  const  auto& cld_frac_i     = get_field_in("cldfrac_ice").get_view<const Pack**>();
   const  auto& qv             = get_field_out("qv").get_view<Pack**>();
   const  auto& qc             = get_field_out("qc").get_view<Pack**>();
   const  auto& nc             = get_field_out("nc").get_view<Pack**>();
@@ -272,15 +274,15 @@ void P3Microphysics::initialize_impl (const RunType /* run_type */)
   // Alias local variables from temporary buffer
   auto inv_exner  = m_buffer.inv_exner;
   auto th_atm     = m_buffer.th_atm;
-  auto cld_frac_l = m_buffer.cld_frac_l;
-  auto cld_frac_i = m_buffer.cld_frac_i;
+//  auto cld_frac_l = m_buffer.cld_frac_l;
+//  auto cld_frac_i = m_buffer.cld_frac_i;
   auto dz         = m_buffer.dz;
 
   // -- Set values for the pre-amble structure
   p3_preproc.set_variables(m_num_cols,nk_pack,pmid,pmid_dry,pseudo_density,pseudo_density_dry,
-                        T_atm,cld_frac_t,
+                        T_atm,cld_frac_t,cld_frac_l, cld_frac_i,
                         qv, qc, nc, qr, nr, qi, qm, ni, bm, qv_prev,
-                        inv_exner, th_atm, cld_frac_l, cld_frac_i, cld_frac_r, dz, runtime_options);
+                        inv_exner, th_atm, cld_frac_r, dz, runtime_options);
   // --Prognostic State Variables:
   prog_state.qc     = p3_preproc.qc;
   prog_state.nc     = p3_preproc.nc;
