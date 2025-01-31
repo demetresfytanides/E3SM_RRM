@@ -69,9 +69,9 @@ public:
         // The ipack slice of input variables used more than once
         const Spack& pmid_pack(pmid(icol,ipack));
         const Spack& T_atm_pack(T_atm(icol,ipack));
-        const Spack& cld_frac_t_pack(cld_frac_t(icol,ipack));
-        const Spack& cld_frac_l_pack(cld_frac_l(icol,ipack));
-        const Spack& cld_frac_i_pack(cld_frac_i(icol,ipack));
+        const Spack& cld_frac_t_in_pack(cld_frac_t_in(icol,ipack));
+        const Spack& cld_frac_l_in_pack(cld_frac_l_in(icol,ipack));
+        const Spack& cld_frac_i_in_pack(cld_frac_i_in(icol,ipack));
         const Spack& pseudo_density_pack(pseudo_density(icol,ipack));
         const Spack& pseudo_density_dry_pack(pseudo_density_dry(icol,ipack));
 
@@ -108,9 +108,9 @@ public:
         // Cloud fraction
         // Set minimum cloud fraction - avoids division by zero
         // Alternatively set fraction to 1 everywhere to disable subgrid effects
-        cld_frac_l(icol,ipack) = runtime_opts.set_cld_frac_l_to_one ? 1 : ekat::max(cld_frac_l_pack,mincld);
-        cld_frac_i(icol,ipack) = runtime_opts.set_cld_frac_i_to_one ? 1 : ekat::max(cld_frac_i_pack,mincld);
-        cld_frac_r(icol,ipack) = runtime_opts.set_cld_frac_r_to_one ? 1 : ekat::max(cld_frac_t_pack,mincld);
+        cld_frac_l(icol,ipack) = runtime_opts.set_cld_frac_l_to_one ? 1 : ekat::max(cld_frac_t_in_pack,mincld);
+        cld_frac_i(icol,ipack) = runtime_opts.set_cld_frac_i_to_one ? 1 : ekat::max(cld_frac_t_in_pack,mincld);
+        cld_frac_r(icol,ipack) = runtime_opts.set_cld_frac_r_to_one ? 1 : ekat::max(cld_frac_t_in_pack,mincld);
 
         // update rain cloud fraction given neighboring levels using max-overlap approach.
         if ( !runtime_opts.set_cld_frac_r_to_one ) {
@@ -123,8 +123,8 @@ public:
             Int ipack_m1 = (lev - 1) / Spack::n;
             Int ivec_m1  = (lev - 1) % Spack::n;
             if (lev != 0) { /* Not applicable at the very top layer */
-              cld_frac_r(icol,ipack)[ivec] = cld_frac_t(icol,ipack_m1)[ivec_m1]>cld_frac_r(icol,ipack)[ivec] ?
-                                                cld_frac_t(icol,ipack_m1)[ivec_m1] :
+              cld_frac_r(icol,ipack)[ivec] = cld_frac_t_in(icol,ipack_m1)[ivec_m1]>cld_frac_r(icol,ipack)[ivec] ?
+                                                cld_frac_t_in(icol,ipack_m1)[ivec_m1] :
                                                 cld_frac_r(icol,ipack)[ivec];
             }
           }
@@ -140,10 +140,9 @@ public:
     view_2d_const pseudo_density;
     view_2d_const pseudo_density_dry;
     view_2d       T_atm;
-    view_2d_const cld_frac_t;
-    view_2d cld_frac_l;
-    view_2d cld_frac_i;
-    view_2d cld_frac_r;
+    view_2d_const cld_frac_t_in;
+    view_2d_const cld_frac_l_in;
+    view_2d_const cld_frac_i_in;
     view_2d       qv;
     view_2d       qc;
     view_2d       nc;
@@ -156,6 +155,9 @@ public:
     view_2d       qv_prev;
     view_2d       inv_exner;
     view_2d       th_atm;
+    view_2d       cld_frac_l;
+    view_2d       cld_frac_i;
+    view_2d       cld_frac_r;
     view_2d       dz;
     // Add runtime_options as a member variable
     P3F::P3Runtime runtime_opts;
@@ -164,11 +166,12 @@ public:
            const view_2d_const& pmid_, const view_2d_const& pmid_dry_,
            const view_2d_const& pseudo_density_,
            const view_2d_const& pseudo_density_dry_, const view_2d& T_atm_,
-           const view_2d_const& cld_frac_t_, const view_2d& cld_frac_l_,
-           const view_2d& cld_frac_i_, const view_2d& qv_, const view_2d& qc_,
+           const view_2d_const& cld_frac_t_in_, const view_2d_const& cld_frac_l_in_, const view_2d_const& cld_frac_i_in_,
+           const view_2d& qv_, const view_2d& qc_,
            const view_2d& nc_, const view_2d& qr_, const view_2d& nr_, const view_2d& qi_,
            const view_2d& qm_, const view_2d& ni_, const view_2d& bm_, const view_2d& qv_prev_,
-           const view_2d& inv_exner_, const view_2d& th_atm_, const view_2d& cld_frac_r_, const view_2d& dz_,
+           const view_2d& inv_exner_, const view_2d& th_atm_, const view_2d& cld_frac_l_,
+           const view_2d& cld_frac_i_, const view_2d& cld_frac_r_, const view_2d& dz_,
            const P3F::P3Runtime& runtime_options
            )
     {
@@ -180,10 +183,9 @@ public:
       pseudo_density = pseudo_density_;
       pseudo_density_dry = pseudo_density_dry_;
       T_atm          = T_atm_;
-      cld_frac_t     = cld_frac_t_;
-      cld_frac_l     = cld_frac_l_;
-      cld_frac_i     = cld_frac_i_;
-
+      cld_frac_t_in     = cld_frac_t_in_;
+      cld_frac_l_in     = cld_frac_l_in_;
+      cld_frac_i_in     = cld_frac_i_in_;
       // OUT
       qv             = qv_;
       qc             = qc_;
@@ -197,6 +199,8 @@ public:
       qv_prev        = qv_prev_;
       inv_exner = inv_exner_;
       th_atm = th_atm_;
+      cld_frac_l = cld_frac_l_;
+      cld_frac_i = cld_frac_i_;
       cld_frac_r = cld_frac_r_;
       dz = dz_;
       runtime_opts = runtime_options;
@@ -371,7 +375,7 @@ public:
 #ifdef SCREAM_P3_SMALL_KERNELS
     static constexpr int num_2d_vector = 64;
 #else
-    static constexpr int num_2d_vector = 6;
+    static constexpr int num_2d_vector = 8;
 #endif
     static constexpr int num_2dp1_vector = 2;
 
@@ -379,6 +383,8 @@ public:
     uview_1d precip_ice_surf_flux;
     uview_2d inv_exner;
     uview_2d th_atm;
+    uview_2d cld_frac_l;
+    uview_2d cld_frac_i;
     uview_2d dz;
     uview_2d qv2qi_depos_tend;
     uview_2d rho_qi;
