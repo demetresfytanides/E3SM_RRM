@@ -141,8 +141,9 @@ public:
     view_2d_const pseudo_density_dry;
     view_2d       T_atm;
     view_2d_const cld_frac_t;
-    view_2d_const cld_frac_l;
-    view_2d_const cld_frac_i;
+    view_2d cld_frac_l;
+    view_2d cld_frac_i;
+    view_2d cld_frac_r;
     view_2d       qv;
     view_2d       qc;
     view_2d       nc;
@@ -155,9 +156,6 @@ public:
     view_2d       qv_prev;
     view_2d       inv_exner;
     view_2d       th_atm;
-//    view_2d       cld_frac_l;
-//    view_2d       cld_frac_i;
-    view_2d       cld_frac_r;
     view_2d       dz;
     // Add runtime_options as a member variable
     P3F::P3Runtime runtime_opts;
@@ -166,8 +164,8 @@ public:
            const view_2d_const& pmid_, const view_2d_const& pmid_dry_,
            const view_2d_const& pseudo_density_,
            const view_2d_const& pseudo_density_dry_, const view_2d& T_atm_,
-           const view_2d_const& cld_frac_t_, const view_2d_const& cld_frac_l_,
-           const view_2d_const& cld_frac_i_, const view_2d& qv_, const view_2d& qc_,
+           const view_2d_const& cld_frac_t_, const view_2d& cld_frac_l_,
+           const view_2d& cld_frac_i_, const view_2d& qv_, const view_2d& qc_,
            const view_2d& nc_, const view_2d& qr_, const view_2d& nr_, const view_2d& qi_,
            const view_2d& qm_, const view_2d& ni_, const view_2d& bm_, const view_2d& qv_prev_,
            const view_2d& inv_exner_, const view_2d& th_atm_, const view_2d& cld_frac_r_, const view_2d& dz_,
