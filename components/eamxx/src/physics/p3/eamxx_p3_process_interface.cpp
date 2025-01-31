@@ -62,6 +62,8 @@ void P3Microphysics::set_grids(const std::shared_ptr<const GridsManager> grids_m
 
   // These variables are needed by the interface, but not actually passed to p3_main.
   add_field<Required>("cldfrac_tot", scalar3d_layout_mid, nondim, grid_name, ps);
+  add_field<Required>("cldfrac_liq", scalar3d_layout_mid, nondim, grid_name, ps);
+  add_field<Required>("cldfrac_ice", scalar3d_layout_mid, nondim, grid_name, ps);
 
 //should we use one pressure only, wet/full?
   add_field<Required>("p_mid",       scalar3d_layout_mid, Pa,     grid_name, ps);
