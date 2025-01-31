@@ -257,8 +257,8 @@ void P3Microphysics::initialize_impl (const RunType /* run_type */)
   const  auto& pseudo_density_dry = get_field_in("pseudo_density_dry").get_view<const Pack**>();
   const  auto& T_atm          = get_field_out("T_mid").get_view<Pack**>();
   const  auto& cld_frac_t_in  = get_field_in("cldfrac_tot").get_view<const Pack**>();
-  const  auto& cld_frac_l_in  = get_field_in("cld_frac_l").get_view<const Pack**>();
-  const  auto& cld_frac_i_in  = get_field_in("cld_frac_i").get_view<const Pack**>();
+  const  auto& cld_frac_l_in  = get_field_in("cldfrac_liq").get_view<const Pack**>();
+  const  auto& cld_frac_i_in  = get_field_in("cldfrac_ice").get_view<const Pack**>();
   const  auto& qv             = get_field_out("qv").get_view<Pack**>();
   const  auto& qc             = get_field_out("qc").get_view<Pack**>();
   const  auto& nc             = get_field_out("nc").get_view<Pack**>();
