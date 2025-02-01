@@ -49,7 +49,7 @@ void Functions<S,D>
    // after qc is depleted
   enforce_conservation = sources > qtendsmall && context;
   if (enforce_conservation.any()){
-    qv2qi_vapdep_tend.set(enforce_conservation, qv2qi_vapdep_tend*(1-ratio)*(il_cldm/cld_frac_i));
+    qv2qi_vapdep_tend.set(enforce_conservation, qv2qi_vapdep_tend + qv2qi_vapdep_tend*(1-ratio)*(il_cldm/cld_frac_i));
     qi2qv_sublim_tend.set(enforce_conservation, qi2qv_sublim_tend*(1-ratio));
   }
 }
