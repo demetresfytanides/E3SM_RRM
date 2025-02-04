@@ -108,8 +108,13 @@ public:
         // Cloud fraction
         // Set minimum cloud fraction - avoids division by zero
         // Alternatively set fraction to 1 everywhere to disable subgrid effects
-        cld_frac_l(icol,ipack) = runtime_opts.set_cld_frac_l_to_one ? 1 : ekat::max(cld_frac_l_in_pack,mincld);
-        cld_frac_i(icol,ipack) = runtime_opts.set_cld_frac_i_to_one ? 1 : ekat::max(cld_frac_i_in_pack,mincld);
+        if (runtime_opts.use_separate_ice_liq_frac){
+          cld_frac_l(icol,ipack) = runtime_opts.set_cld_frac_l_to_one ? 1 : ekat::max(cld_frac_l_in_pack,mincld);
+          cld_frac_i(icol,ipack) = runtime_opts.set_cld_frac_i_to_one ? 1 : ekat::max(cld_frac_i_in_pack,mincld);
+        } else {
+          cld_frac_l(icol,ipack) = runtime_opts.set_cld_frac_l_to_one ? 1 : ekat::max(cld_frac_t_in_pack,mincld);
+          cld_frac_i(icol,ipack) = runtime_opts.set_cld_frac_i_to_one ? 1 : ekat::max(cld_frac_t_in_pack,mincld);
+        }
         cld_frac_r(icol,ipack) = runtime_opts.set_cld_frac_r_to_one ? 1 : ekat::max(cld_frac_t_in_pack,mincld);
 
         // update rain cloud fraction given neighboring levels using max-overlap approach.
