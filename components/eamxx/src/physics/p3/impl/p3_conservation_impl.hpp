@@ -44,12 +44,12 @@ void Functions<S,D>
   // water to begin with.
   // in instances where ratio < 1 and we have qc, qidep needs to take over
    //but this is an in addition to the qidep we computed outside the mixed
-   //phase cloud. qidep*(1._rtype-ratio)*(il_cldm/cld_frac_i) is the additional
+   //phase cloud. qidep*(1._rtype-ratio)*(il_cldm/(cld_frac_i-il_cldm)) is the additional
    // vapor depositional growth rate that takes place within the mixed phase cloud
    // after qc is depleted
   enforce_conservation = sources > qtendsmall && context;
   if (enforce_conservation.any()){
-    qv2qi_vapdep_tend.set(enforce_conservation, qv2qi_vapdep_tend + qv2qi_vapdep_tend*(1-ratio)*(il_cldm/cld_frac_i));
+    qv2qi_vapdep_tend.set(enforce_conservation, qv2qi_vapdep_tend + qv2qi_vapdep_tend*(1-ratio)*(il_cldm/(cld_frac_i-il_cldm)));
     qi2qv_sublim_tend.set(enforce_conservation, qi2qv_sublim_tend*(1-ratio));
   }
 }
