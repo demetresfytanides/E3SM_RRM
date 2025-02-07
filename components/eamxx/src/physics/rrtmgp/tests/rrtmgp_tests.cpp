@@ -401,7 +401,7 @@ int run_kokkos(int argc, char** argv) {
 
     // Initialize absorption coefficients
   logger->info("Initialize RRTMGP...\n");
-  interface_t::rrtmgp_initialize(gas_concs, coefficients_file_sw, coefficients_file_lw, cloud_optics_file_sw, cloud_optics_file_lw, logger);
+  interface_t::rrtmgp_initialize(gas_concs, coefficients_file_sw, coefficients_file_lw, cloud_optics_file_sw, cloud_optics_file_lw, logger, 2.0);
 
   // Setup our dummy atmosphere based on the input data we read in
   logger->info("Setup dummy atmos...\n");
@@ -470,12 +470,12 @@ int run_kokkos(int argc, char** argv) {
   auto aer_ssa_sw = real3dk("aer_ssa_sw", ncol, nlay, nswbands);
   auto aer_asm_sw = real3dk("aer_asm_sw", ncol, nlay, nswbands);
   auto aer_tau_lw = real3dk("aer_tau_lw", ncol, nlay, nlwbands);
-  Kokkos::parallel_for(MDRP::template get<3>({nswbands,nlay,ncol}), KOKKOS_LAMBDA(int ibnd, int ilay, int icol) {
+  Kokkos::parallel_for(MDRP::template get<3>({ncol, nlay, nswbands}), KOKKOS_LAMBDA(int icol, int ilay, int ibnd) {
     aer_tau_sw(icol,ilay,ibnd) = 0;
     aer_ssa_sw(icol,ilay,ibnd) = 0;
     aer_asm_sw(icol,ilay,ibnd) = 0;
   });
-  Kokkos::parallel_for(MDRP::template get<3>({nlwbands,nlay,ncol}), KOKKOS_LAMBDA(int ibnd, int ilay, int icol) {
+  Kokkos::parallel_for(MDRP::template get<3>({ncol, nlay, nlwbands}), KOKKOS_LAMBDA(int icol, int ilay, int ibnd) {
     aer_tau_lw(icol,ilay,ibnd) = 0;
   });
 
