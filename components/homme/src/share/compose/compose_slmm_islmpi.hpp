@@ -238,7 +238,7 @@ struct FixedCapList {
 #else
     set_n(0);
 #endif
-    d_ = Array(nullptr);
+    d_ = Array(nullptr, 0);
   }
 
 private:
@@ -546,8 +546,8 @@ void nullify (ElemData<DT>& ed) {
   ed.nbrs.nullify();
   ed.own.nullify();
   ed.rmt.nullify();
-  ed.src = decltype(ed.src)(nullptr);
-  ed.q_extrema = decltype(ed.q_extrema)(nullptr);
+  ed.src = decltype(ed.src)(nullptr, 0, 0);
+  ed.q_extrema = decltype(ed.q_extrema)(nullptr, 0, 0);
   ed.qdp = nullptr;
   ed.dp = nullptr;
   ed.q = nullptr;

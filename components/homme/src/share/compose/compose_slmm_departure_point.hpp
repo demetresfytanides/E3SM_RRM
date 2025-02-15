@@ -47,12 +47,12 @@ struct LocalMesh {
 
 template <typename ES>
 void nullify (LocalMesh<ES>& m) {
-  m.p = decltype(m.p)(nullptr);
-  m.nml = decltype(m.nml)(nullptr);
-  m.e = decltype(m.e)(nullptr);
-  m.en = decltype(m.en)(nullptr);
-  m.perimp = decltype(m.perimp)(nullptr);
-  m.perimnml = decltype(m.perimnml)(nullptr);
+  m.p = decltype(m.p)(nullptr, 0);
+  m.nml = decltype(m.nml)(nullptr, 0);
+  m.e = decltype(m.e)(nullptr, 0, 0);
+  m.en = decltype(m.en)(nullptr, 0, 0);
+  m.perimp = decltype(m.perimp)(nullptr, 0);
+  m.perimnml = decltype(m.perimnml)(nullptr, 0);
 }
 
 // Inward-oriented normal. In practice, we want to form high-quality normals
