@@ -1,0 +1,40 @@
+name: clang-format
+
+# if .*pp files are touched in a PR, check if they pass clang-format
+# this relies on clang-format in ubuntu-latest
+# users can install and run clang-format on their local machines
+
+on:
+  pull_request:
+    branches: ["master"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  linter:
+    if: ${{ github.repository == 'E3SM-Project/E3SM' }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: tj-actions/changed-files@v45
+      id: changed-files
+    - name: clang-format
+      env:
+        ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+      run: |
+        touch /tmp/changed_files.txt
+        for file in ${ALL_CHANGED_FILES}; do
+          if [[ "$file" =~ \.(cpp|hpp|cc|cxx|h|hxx)$ ]]; then
+            echo "$file" >> /tmp/changed_files.txt
+          fi
+        done
+        clang-format --dry-run --Werror --verbose --files=/tmp/changed_files.txt
+        if [ $? -ne 0 ]; then
+          echo "clang-format failed"
+          exit 1
+        fi
+        echo "clang-format passed"
