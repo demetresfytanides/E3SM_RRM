@@ -26,7 +26,7 @@ you may visit our public confluence [EAMxx user guide](https://acme-climate.atla
 
 ### [Doubly Periodic EAMxx](dp_eamxx.md)
 
-### [PySCREAM](pyscream.md)
+### [PySCREAM](pyeamxx.md)
 
 ### [IO Metadata](io_metadata.md)
 
