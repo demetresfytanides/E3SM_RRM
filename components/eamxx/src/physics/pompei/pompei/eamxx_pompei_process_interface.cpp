@@ -17,7 +17,7 @@ namespace scream
  *     params - a parameter list of options for the process.
  */
 
-AP_TEMPLATE::AP_TEMPLATE (const ekat::Comm& comm, const ekat::ParameterList& params)
+POMPEI::POMPEI (const ekat::Comm& comm, const ekat::ParameterList& params)
  : AtmosphereProcess(comm,params)
 {
   // The 'params' variable will hold all runtime options.  
@@ -37,7 +37,7 @@ AP_TEMPLATE::AP_TEMPLATE (const ekat::Comm& comm, const ekat::ParameterList& par
  * Inputs:
  *     grids_manager - a grids manager object which stores all grids used in this simulation
  */
-void AP_TEMPLATE::
+void POMPEI::
 set_grids (const std::shared_ptr<const GridsManager> grids_manager)
 {
   // Some typical namespaces used in set_grids,
@@ -89,7 +89,7 @@ set_grids (const std::shared_ptr<const GridsManager> grids_manager)
  *
  * can also be empty
  */
-void AP_TEMPLATE::initialize_impl (const RunType /* run_type */)
+void POMPEI::initialize_impl (const RunType /* run_type */)
 {
   // NOTE: run_type tells us if this is an initial or restarted run,
 }
@@ -103,7 +103,7 @@ void AP_TEMPLATE::initialize_impl (const RunType /* run_type */)
  * Inputs:
  *     dt - the timestep for this run step.
  */
-void AP_TEMPLATE::run_impl (const double dt)
+void POMPEI::run_impl (const double dt)
 {
   // Typically here the developer would retrieve data from fields,
   // For example,
@@ -122,7 +122,7 @@ void AP_TEMPLATE::run_impl (const double dt)
  * In most cases this is left blank, as EAMxx takes care of most finalization steps.
  * But just in case a process has specific needs the option is available.
  */
-void AP_TEMPLATE::finalize_impl ()
+void POMPEI::finalize_impl ()
 {
   // Usually blank
 }

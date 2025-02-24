@@ -1,8 +1,8 @@
 /*
  * First define this process intereface as a new header file
  */
-#ifndef EAMXX_AP_TEMPLATE_PROCESS_INTERFACE_HPP
-#define EAMXX_AP_TEMPLATE_PROCESS_INTERFACE_HPP
+#ifndef EAMXX_POMPEI_PROCESS_INTERFACE_HPP
+#define EAMXX_POMPEI_PROCESS_INTERFACE_HPP
 /*
  * Any include statements.  By default you want to include the atmosphere_process.hpp header
  */
@@ -12,14 +12,14 @@ namespace scream
 {
 
 /*
- * Class definition for new process interface.  Change "AP_TEMPLATE" to a name that makes sense.
+ * Class definition for new process interface.  Change "POMPEI" to a name that makes sense.
  */
-class AP_TEMPLATE : public AtmosphereProcess
+class POMPEI : public AtmosphereProcess
 {
 // Define public functions
 public:
 
-  AP_TEMPLATE (const ekat::Comm& comm, const ekat::ParameterList& params);
+  POMPEI (const ekat::Comm& comm, const ekat::ParameterList& params);
 
   AtmosphereProcessType type () const override { return AtmosphereProcessType::Physics; }
 
@@ -39,4 +39,4 @@ protected:
 
 } // namespace scream
 
-#endif // EAMXX_AP_TEMPLATE_PROCESS_INTERFACE_HPP
+#endif // EAMXX_POMPEI_PROCESS_INTERFACE_HPP
