@@ -82,6 +82,10 @@ set_grids (const std::shared_ptr<const GridsManager> grids_manager)
   //     NAME and UNITS are as above
   //     GRID is the actual grid, typically "m_grid"
 
+  m_grid = grids_manager->get_grid("Physics");
+  m_ncols = m_grid->get_num_local_dofs();
+  m_nlevs = m_grid->get_num_vertical_levels();
+  
 }
 
 /*-----------------------------------------------------------------------------------------------
