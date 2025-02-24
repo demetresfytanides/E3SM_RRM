@@ -189,7 +189,22 @@ void POMPEI::run_impl (const double dt)
   //   const auto Y = get_output_field(NAME_Y);
 
   // Another typical step is to issue a call to the underlying process code.
+  using PC  = scream::physics::Constants<Real>;
+  constexpr Real g = PC::gravit;
 
+  auto t = timestamp() + dt;
+  auto rate = pompei::ash_emission_rate (t.days_from(m_eruption_start));
+  auto mass = dt*rate;
+
+  auto qash = get_field_out("ash");
+  auto rho = get_field_in("pseudo_density");
+
+  // y.update(x,a,b) means y = b*y + a*x
+  qash.scale(rho);
+  qash.scale_inv(g)
+  qash.update(m_emission_mask,mass,1.0);
+  qash.scale_inv(rho);
+  qash.scale(g);
 }
 
 /*-----------------------------------------------------------------------------------------------
