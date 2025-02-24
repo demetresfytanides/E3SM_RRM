@@ -7,7 +7,7 @@
  */
 
  #include "physics/pompei/eamxx_pompei_process_interface.hpp"
- 
+
  #include "physics/share/physics_constants.hpp"
  #include "pompei.hpp"
 
@@ -31,6 +31,7 @@ POMPEI::POMPEI (const ekat::Comm& comm, const ekat::ParameterList& params)
   //
   // ex:
   // m_Y = params.get<X>("Y");
+  m_eruption_start = util::str_to_time_step(params.get<std::string>("eruption_start"));
 }
 
 /*-----------------------------------------------------------------------------------------------
