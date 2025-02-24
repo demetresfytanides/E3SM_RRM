@@ -23,7 +23,7 @@ public:
 
   AtmosphereProcessType type () const override { return AtmosphereProcessType::Physics; }
 
-  std::string name () const override { return "SOME STRING DESCRIPTION"; }
+  std::string name () const override { return "pompei"; }
 
   void set_grids (const std::shared_ptr<const GridsManager> grids_manager) override;
 // Define the protected functions, usually at least initialize_impl, run_impl and finalize_impl,
