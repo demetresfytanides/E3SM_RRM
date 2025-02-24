@@ -51,7 +51,7 @@ set_grids (const std::shared_ptr<const GridsManager> grids_manager)
   //   using PC = scream::physics::Constants<Real>;
 
   // Specify which grid this process will act upon, typical options are "Dynamics" or "Physics".
-  auto m_grid = grids_manager->get_grid("Physics");
+  // auto m_grid = grids_manager->get_grid("Physics");
 
   // When declaring a field for use we need:
   //
@@ -85,7 +85,12 @@ set_grids (const std::shared_ptr<const GridsManager> grids_manager)
   m_grid = grids_manager->get_grid("Physics");
   m_ncols = m_grid->get_num_local_dofs();
   m_nlevs = m_grid->get_num_vertical_levels();
-  
+
+  constexpr auto Pa = ekat::units::Units::Pa;
+  constexpr auto kg = ekat::units::Units::kg;
+
+  const auto layout_3d = m_grid->get_3d_scalar_layout(true);
+
 }
 
 /*-----------------------------------------------------------------------------------------------
