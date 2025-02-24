@@ -35,6 +35,10 @@ protected:
 
 // Could also define here universal variables for the process interface.
 
+util::TimeStamp m_eruption_start;
+std::shared_ptr<const AbstractGrid>   m_grid;
+int m_ncols, m_nlevs;
+Field m_emission_mask;
 };
 
 } // namespace scream
