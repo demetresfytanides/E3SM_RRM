@@ -6,6 +6,11 @@
  *     $PROCESS.hpp                          (a header file for the process itself)
  */
 
+ #include "physics/pompei/eamxx_pompei_process_interface.hpp"
+ 
+ #include "physics/share/physics_constants.hpp"
+ #include "pompei.hpp"
+
 namespace scream
 {
 
