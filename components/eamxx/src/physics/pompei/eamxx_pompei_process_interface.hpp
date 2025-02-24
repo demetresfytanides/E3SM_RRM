@@ -28,7 +28,9 @@ public:
   void set_grids (const std::shared_ptr<const GridsManager> grids_manager) override;
 // Define the protected functions, usually at least initialize_impl, run_impl and finalize_impl,
 // but others could be included.  See eamxx_template_process_interface.cpp for definitions of each of these.
+#ifndef KOKKOS_ENABLE_CUDA
 protected:
+#endif
   void initialize_impl (const RunType run_type) override;
   void run_impl        (const double dt) override;
   void finalize_impl   () override;

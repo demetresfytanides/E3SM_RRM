@@ -31,7 +31,7 @@ POMPEI::POMPEI (const ekat::Comm& comm, const ekat::ParameterList& params)
   //
   // ex:
   // m_Y = params.get<X>("Y");
-  m_eruption_start = util::str_to_time_step(params.get<std::string>("eruption_start"));
+  m_eruption_start = util::str_to_time_stamp(params.get<std::string>("eruption_start"));
 }
 
 /*-----------------------------------------------------------------------------------------------
@@ -201,7 +201,7 @@ void POMPEI::run_impl (const double dt)
 
   // y.update(x,a,b) means y = b*y + a*x
   qash.scale(rho);
-  qash.scale_inv(g)
+  qash.scale(1/g);
   qash.update(m_emission_mask,mass,1.0);
   qash.scale_inv(rho);
   qash.scale(g);
