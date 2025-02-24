@@ -86,10 +86,13 @@ set_grids (const std::shared_ptr<const GridsManager> grids_manager)
   m_ncols = m_grid->get_num_local_dofs();
   m_nlevs = m_grid->get_num_vertical_levels();
 
-  constexpr auto Pa = ekat::units::Units::Pa;
-  constexpr auto kg = ekat::units::Units::kg;
+  constexpr auto Pa = ekat::units::Pa;
+  constexpr auto kg = ekat::units::kg;
 
   const auto layout_3d = m_grid->get_3d_scalar_layout(true);
+
+  add_field<Required>("pseudo_density", layout_3d, Pa, m_grid->name());
+  add_tracer<Updated>("ash", m_grid, kg/kg);
 
 }
 
