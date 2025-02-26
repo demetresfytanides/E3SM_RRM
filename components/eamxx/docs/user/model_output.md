@@ -197,9 +197,9 @@ file and the type of the parameter value).
 - restart options: when performing a restart, EAMxx attempts to restart every output stream listed in
   the `output_yaml_files` atm option (which can be queried via `atmquery output_yaml_files`). The user
   can specify a few options, in order to tweak the restart behavior:
-  - `Perform Restart` (`Restart` sublist, boolean): this parameter is `true` by default, but can be set
-    to `false` to force the model to ignore any history restart files, and start the output stream from
-    scratch, as if this was an initial run.
+  - `skip_restart_if_rhist_not_found` (`Restart` sublist, boolean): this parameter is `false` by default, but can be set
+    to `true` to make the model start the output stream anew (as if this was an initial run) if the proper rhist
+    file name is not found in rpointer.atm. This allows to add a new output stream after a restart.
   - `filename_prefix` (`Restart` sublist, string): by default, this parameter is set to match the value
     of `filename_prefix` from the toplevel list. It can be set to something else in case we want to
     restart a previous simulation that was using a different filename prefix.
