@@ -107,7 +107,7 @@ jobs:
           ./cime/scripts/create_test ${{ matrix.test.full_name }} ${{ env.flags }} --wait
       - name: Upload case files
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.test.full_name }}
           path: |
